@@ -74,6 +74,23 @@ def install(app, directory):
     def lens_process(identifier):
         return jsonify(bench.process(identifier, request.json or {}))
 
+    @app.post('/lens/api/projects/<identifier>/stereo')
+    def lens_stereo_create(identifier):
+        return jsonify(bench.stereo_create(identifier, request.json or {}))
+
+    @app.get('/lens/api/projects/<identifier>/stereo/<sid>/probe')
+    def lens_stereo_probe(identifier, sid):
+        return jsonify(bench.stereo_probe(identifier, sid, request.args.get('u'), request.args.get('v')))
+
+    @app.post('/lens/api/projects/<identifier>/stereo/<sid>/confirm')
+    def lens_stereo_confirm(identifier, sid):
+        return jsonify(bench.stereo_confirm(identifier, sid, request.json or {}))
+
+    @app.get('/lens/api/projects/<identifier>/stereo/<sid>/export/<kind>')
+    def lens_stereo_export(identifier, sid, kind):
+        data, mimetype, name = bench.stereo_export(identifier, sid, kind)
+        return send_file(io.BytesIO(data), mimetype=mimetype, as_attachment=True, download_name=name)
+
     @app.get('/lens/api/assets/<key>')
     def lens_asset(key):
         return send_file(io.BytesIO(store.bytes(key)), mimetype='image/png')

@@ -23,7 +23,8 @@ class Store:
         identifier = uuid.uuid4().hex
         doc = {'id': identifier, 'title': str(title)[:100] or 'Lens session', 'revision': 0,
                'board': {'columns': 8, 'rows': 6, 'square_mm': 25.0},
-               'images': [], 'profiles': [], 'outputs': [], 'snapshots': [], 'active_profile': None}
+               'images': [], 'profiles': [], 'outputs': [], 'snapshots': [], 'active_profile': None,
+               'stereo': []}
         self.write(doc)
         return doc
 
@@ -81,7 +82,7 @@ class Store:
         return output
 
     def find(self, doc, group, identifier):
-        for item in doc[group]:
+        for item in doc.get(group, []):
             if item['id'] == identifier:
                 return item
         raise Invalid('所选条目不存在')
