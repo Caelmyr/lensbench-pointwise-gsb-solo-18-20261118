@@ -1,0 +1,13 @@
+services:
+  lensbench:
+    build: .
+    image: solo21-lensbench:1.0
+    ports:
+      - "18921:18921"
+    environment:
+      LENSBENCH_DATA_DIR: /data
+      PORT: "18921"
+    volumes:
+      - lensbench-data:/data
+volumes:
+  lensbench-data:
